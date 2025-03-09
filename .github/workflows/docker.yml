@@ -1,15 +1,19 @@
 name: build and push docker image
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Docker image tag'
-        required: true
+  workflow_run:
+    workflows: ["Node.js.yml"]
+    types:
+      - completed
+    branches:
+        - main
 
 jobs:
     build:
         runs-on: ubuntu-latest
+
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        # The if conditional checks if the workflow_run event was successful before running the job.
 
         steps:
         - uses: actions/checkout@v2
