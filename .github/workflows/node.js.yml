@@ -30,11 +30,14 @@ jobs:
     - name: Run Linter
       run: npx eslint .
     - name: Cache node_modules
-      uses: actions/cache@v2
+      id: cache-node-modules
+      uses: actions/cache@v4
       with:
-        path: ~/.npm
+        path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node- # This caches the npm modules based on the hash of the package-lock.json file
-    - run: npm run build --if-present
-    - run: npm test
+    - name: Build and test
+      if: steps.cache-node-modules.outputs.cache-hit != 'true'  
+      # Skip build and test if cache hit
+      run: |
+        npm run build --if-present
+        npm test
