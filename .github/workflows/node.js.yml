@@ -32,6 +32,7 @@ jobs:
     - name: Cache node_modules
       id: cache-node-modules
       uses: actions/cache@v4
+      # actions/cache is a GitHub Action to cache dependencies and build outputs to improve workflow execution time.
       with:
         path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
